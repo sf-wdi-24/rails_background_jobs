@@ -22,7 +22,6 @@ class UsersController < ApplicationController
     else
       @user = User.new(user_params)
       if @user.save
-        UserMailer.welcome(@user).deliver_now
         session[:user_id] = @user.id
         flash[:notice] = "Successfully signed up."
         redirect_to user_path(@user)
