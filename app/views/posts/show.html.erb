@@ -4,7 +4,22 @@
 <p class="small text-muted">
   Posted <%= time_ago_in_words(@post.created_at) %> ago by <%= link_to @post.user.email, user_path(@post.user) %>
 </p>
-<p class="small text-muted"><%= @post.comments.count %> <%= "comment".pluralize(@post.comments.count) %></p>
+<p class="small text-muted">
+  <%= @post.comments.count %> <%= "comment".pluralize(@post.comments.count) %>
+  &nbsp;&nbsp;
+  <% if current_user %>
+    <%= link_to "javascript:void(0)", class: "favorite", data: { post_id: @post.id } do %>
+      <% if current_user.favorite_posts.include?(@post) %>
+        <i class="fa fa-star"></i>
+      <% else %>
+        <i class="fa fa-star-o"></i>
+      <% end %>
+    <% end %>
+  <% else %>
+    <i class="fa fa-star-o"></i>
+  <% end %>
+  <span class="favorites-count"><%= @post.favorites.count %></span>
+</p>
 
 <% if current_user %>
   <hr>

@@ -4,7 +4,10 @@ Rails.application.routes.draw do
   resources :posts do
     resources :comments, except: [:index, :show]
   end
+
   resources :users, except: [:new]
+  resources :favorites, only: [:create]
+  delete "/favorites/:post_id", to: "favorites#destroy"
 
   get "/signup", to: "users#new"
   get "/login", to: "sessions#new"
