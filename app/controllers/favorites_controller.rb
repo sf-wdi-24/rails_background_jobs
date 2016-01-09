@@ -2,11 +2,13 @@ class FavoritesController < ApplicationController
 
   def create
     if current_user
-      favorited_post = Post.find(favorite_params[:post_id])
+      post_id = favorite_params[:post_id]
+      favorited_post = Post.find(post_id)
       if current_user.favorite_posts.include?(favorited_post)
         render json: { error: "You already favorited this post." }, status: :unprocessable_entity
       else
-        current_user.favorites.create(favorite_params)
+        Favorite.delay(queue: :favorites).create(user_id: current_user.id, post_id: post_id)
+        # current_user.favorites.delay(queue: :favorites).create(favorite_params)
         render json: {}, status: :no_content
       end
     else
@@ -18,7 +20,7 @@ class FavoritesController < ApplicationController
     if current_user
       unfavorites = Favorite.where(user_id: current_user.id, post_id: params[:post_id])
       if unfavorites.any?
-        unfavorites.first.destroy
+        unfavorites.first.delay(queue: :unfavorites).destroy
         render json: {}, status: :no_content
       else
         render json: { error: "Something went wrong." }, status: :unprocessable_entity
