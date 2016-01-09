@@ -8,7 +8,6 @@ class FavoritesController < ApplicationController
         render json: { error: "You already favorited this post." }, status: :unprocessable_entity
       else
         Favorite.delay(queue: :favorites).create(user_id: current_user.id, post_id: post_id)
-        # current_user.favorites.delay(queue: :favorites).create(favorite_params)
         render json: {}, status: :no_content
       end
     else
