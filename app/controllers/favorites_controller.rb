@@ -18,7 +18,9 @@ class FavoritesController < ApplicationController
     if current_user
       unfavorites = Favorite.where(user_id: current_user.id, post_id: params[:post_id])
       if unfavorites.any?
-        unfavorites.first.destroy
+        unfavorites.each do |unfavorite|
+          unfavorite.destroy
+        end
       end
       render json: {}, status: :no_content
     else
