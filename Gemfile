@@ -34,11 +34,12 @@ gem 'bcrypt', '~> 3.1.7'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+gem 'ffaker'
+
 group :development, :test do
   gem 'byebug'
   gem 'dotenv-rails'
   gem 'factory_girl_rails'
-  gem 'ffaker'
   gem 'rspec-rails'
   gem 'simplecov', require: false
   gem 'spring'
