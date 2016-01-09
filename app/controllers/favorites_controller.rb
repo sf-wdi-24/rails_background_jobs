@@ -6,9 +6,9 @@ class FavoritesController < ApplicationController
       if favorited_post = Post.find_by(id: post_id)
         unless current_user.favorite_posts.include?(favorited_post)
           Favorite.delay(queue: :favorites).create(user_id: current_user.id, post_id: post_id)
-          render json: {}, status: :no_content
         end
       end
+      render json: {}, status: :no_content
     else
       render json: { error: "You must be logged in to do this." }, status: :unauthorized
     end
@@ -19,8 +19,8 @@ class FavoritesController < ApplicationController
       unfavorites = Favorite.where(user_id: current_user.id, post_id: params[:post_id])
       if unfavorites.any?
         unfavorites.first.delay(queue: :unfavorites).destroy
-        render json: {}, status: :no_content
       end
+      render json: {}, status: :no_content
     else
       render json: { error: "You must be logged in to do this." }, status: :unauthorized
     end
