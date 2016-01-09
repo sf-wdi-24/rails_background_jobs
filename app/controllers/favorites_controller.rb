@@ -3,10 +3,11 @@ class FavoritesController < ApplicationController
   def create
     if current_user
       post_id = favorite_params[:post_id]
-      favorited_post = Post.find(post_id)
-      unless current_user.favorite_posts.include?(favorited_post)
-        Favorite.create(user_id: current_user.id, post_id: post_id)
-        render json: {}, status: :no_content
+      if favorited_post = Post.find_by(id: post_id)
+        unless current_user.favorite_posts.include?(favorited_post)
+          Favorite.create(user_id: current_user.id, post_id: post_id)
+          render json: {}, status: :no_content
+        end
       end
     else
       render json: { error: "You must be logged in to do this." }, status: :unauthorized
