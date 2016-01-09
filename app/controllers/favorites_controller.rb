@@ -4,9 +4,7 @@ class FavoritesController < ApplicationController
     if current_user
       post_id = favorite_params[:post_id]
       favorited_post = Post.find(post_id)
-      if current_user.favorite_posts.include?(favorited_post)
-        render json: { error: "You already favorited this post." }, status: :unprocessable_entity
-      else
+      unless current_user.favorite_posts.include?(favorited_post)
         Favorite.create(user_id: current_user.id, post_id: post_id)
         render json: {}, status: :no_content
       end
@@ -21,8 +19,6 @@ class FavoritesController < ApplicationController
       if unfavorites.any?
         unfavorites.first.destroy
         render json: {}, status: :no_content
-      else
-        render json: { error: "Something went wrong." }, status: :unprocessable_entity
       end
     else
       render json: { error: "You must be logged in to do this." }, status: :unauthorized
